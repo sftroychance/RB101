@@ -1,0 +1,24 @@
+Use irb to run the following code:
+
+  s = 'abc'
+  puts s.public_methods.inspect
+
+You should find that it prints a list of all of the public methods available to the String s; this includes not only those methods defined in the String class, but also methods that are inherited from Object (which inherits other methods from the BasicObject class and the Kernel module). That's a lot of methods.
+
+How would you modify this code to print just the public methods that are defined or overridden by the String class? That is, the list should exclude all members that are only defined in Object, BasicObject, and Kernel.
+
+The method #public_methods is part of the Object class, and that is where it is documented. 
+
+The signature: 
+
+public_methods(all=true) → array
+
+The optional argument indicates whether you want to list all the methods from the calling object class plus all the methods inherited from parent classes, which is represented by the default value of true. The method returns an array of method names as symbols.
+
+To list only those methods defined/overridden by the calling object:
+
+puts s.public_methods(false).inspect
+
+You can verify the difference with:
+s.public_methods.count
+s.public_methods(false).count

@@ -1,0 +1,25 @@
+Assume you have the following code:
+
+  require 'date'
+
+  puts Date.civil
+  puts Date.civil(2016)
+  puts Date.civil(2016, 5)
+  puts Date.civil(2016, 5, 13)
+
+What will each of the 4 puts statements print?
+
+Per documentation:
+civil([year=-4712[, month=1[, mday=1[, start=Date::ITALY]]]]) → date
+
+The puts statement calls the to_s method for the class. The Date#to_s method returns a string with the date in the format YYYY-MM-DD.
+
+The ::civil method is a class method, so as in the code, it can be called without a Date object being instantiated.  The documentation indicates that Date::civil is an alias for Date::new. 
+
+puts Date.civil will print a string containing all the default values, since none are specified in the method call: "-4712-01-01"
+
+puts Date.civil(2016) will print "2016-01-01"
+
+puts Date.civil(2016, 5) will print "2016-05-01"
+
+puts Date.civil(2016, 5, 13) will print "2016-05-13"

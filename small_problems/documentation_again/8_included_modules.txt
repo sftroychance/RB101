@@ -1,0 +1,17 @@
+For this exercise, start by using version 2.3.0 of the Ruby Array Documentation. If you use a more recent version of the documentation, you won't get the full benefit of this exercise. You don't have to install Ruby 2.3.0 - you can use any more recent version to test the code.
+
+Use irb to run the following code:
+
+  a = [5, 9, 3, 11]
+  puts a.min
+
+Find the documentation for the #min method and change the above code to print the two smallest values in the Array.
+
+The #min method is from the Enumerable class. The reference to the old documentation is probably to point out that included modules for a class are listed in different places in the old versus new documentation (in the new documentation, listed before the methods; in the old documentation, listed after the methods.)
+
+To return the two smallest values, we would send an argument to the method:
+puts a.min(2)
+
+This returns an array with the number of elements requested; if the number given is larger than the array size, it will return the full original array.
+
+Note an optional block can be given with #min to clarify what should be compared (can compare the length of strings, for instance).  

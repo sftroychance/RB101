@@ -1,0 +1,14 @@
+What do each of these puts statements output?
+
+  a = %w(a b c d e)
+  puts a.fetch(7)
+  puts a.fetch(7, 'beats me')
+  puts a.fetch(7) { |index| index**2 }
+  
+puts a.fetch(7) will return an error because the index is out of range.
+
+puts a.fetch(7, 'beats me') will print 'beats me' since that is given as the default value if a value at the index does not exist.
+
+puts a.fetch(7) { |index| index**2 } will print 49; Array#fetch, when called with a block, will return the value at the index if it exists; otherwise, it will execute the block.  The block is not called if the index is in range. 
+
+Note that accessing a non-existent index using a[7] would simply return a nil, not an error.

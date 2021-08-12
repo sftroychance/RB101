@@ -1,0 +1,17 @@
+What does this code print?
+
+  5.step(to: 10, by: 3) { |value| puts value }
+
+#step is a method in the Numeric class (Numeric is the parent of Intger). 
+
+This loop will start at 5 and then increment by 3 until it reaches 10.
+
+This is expected to print:
+5
+8
+
+...and it does. 
+
+Note that the documentation includes a reference to Array#take: my_array.take(4) would return an array with the first four elements of my_array.
+
+Keyword arguments == named arguments; the argument names are symbols. Using named arguments, the arguments can be listed in any order. 
