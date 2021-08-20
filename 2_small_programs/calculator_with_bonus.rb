@@ -5,21 +5,18 @@
 # 4. Extract all messages to a configuration file.
 # 5. Internationalize the messages.
 # notes:
-#   - Language is hard-coded but could present an option to the user
-#   - Only English (:en) and Spanish (:es) are current options
-#   - The Spanish is rough (Google) translation
+#  - Language is hard-coded but could present an option to the user
+#  - Only English (:en) and Spanish (:es) are current options
+#  - The Spanish is rough (Google) translation
+#  - updated to YAML per official solution (formerly an external file containing a hash)
 
-# optional upgrades:
-# - update to YAML per official solution
-# - add language option at beginning or code it into config file
-# - replace loops with 'until valid_input?' loops (or until end_program? for the larger loop)
+require 'yaml'
+MESSAGE = YAML.load_file('calculator_messages.yml')
 
-require_relative 'messages'
-
-LANG = :es
+LANG = :en
 
 def prompt(action, value='')
-    Kernel.puts("=>#{MESSAGE[action][LANG]} #{value}")
+  Kernel.puts("=>#{MESSAGE[LANG][action]} #{value}")
 end
 
 def valid_number?(num)
@@ -27,7 +24,7 @@ def valid_number?(num)
 end
 
 def operation_to_message(op)
-  return '=>' + MESSAGE[:operation][LANG][op.to_i - 1] + ' ' + MESSAGE[:oper_pred][LANG]
+  '=>' + MESSAGE[LANG][:operation][op.to_i - 1] + ' ' + MESSAGE[LANG][:oper_pred]
 end
 
 prompt(:welcome)

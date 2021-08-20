@@ -1,0 +1,38 @@
+:en:
+  :welcome: Welcome to Calculator! Enter your name
+  :greet: Welcome
+  :name_err: Make sure to use a valid name.
+  :first_num: What is the first number?
+  :second_num: What is the second number?
+  :num_error: Hmmm...that doesn't look like a valid number
+  :which_action: |
+    What action would you like to perform?
+    1) add
+    2) subtract
+    3) multiply
+    4) divide
+  :action_error: Must choose 1, 2, 3 or 4
+  :continue: Do you want to perform another calculation? (Y if yes)
+  :goodbye: Thank you for using calculator! Goodbye!
+  :operation: ['Adding', 'Subtracting', 'Multiplying', 'Dividing']
+  :oper_pred: the two numbers
+  :result: The result is
+:es:
+  :welcome: ¡Bienvenido a la calculadora!  Introduzca su nombre
+  :greet: ¡Hola
+  :name_err: Ingrese un nombre valido
+  :first_num: ¿Cual es el primer numero?
+  :second_num: ¿Cual es el segundo numero?
+  :num_error: Ese no es un numero valido
+  :which_action: |
+   ¿Qué acción te gustaría realizar?
+    1) agregar
+    2) sustraer
+    3) multiplicar
+    4) dividir
+  :action_error: Debes elegir 1, 2, 3 o 4
+  :continue: ¿Quieres realizar otro cálculo? (Y if sí)
+  :goodbye: ¡Gracias por usar la calculadora! ¡Adiós!
+  :operation: ['Sumando', 'Restando', 'Multiplicando', 'Dividiendo']
+  :oper_pred: 'los dos números'
+  :result: 'El resultado es'
