@@ -217,7 +217,7 @@ Metrics/ClassLength:
 
 Layout/LineLength:
   Description: Limit lines to 80 characters.
-  Enabled: false
+  Enabled: true
   Max: 80
   StyleGuide: https://rubystyle.guide/#80-character-limits
   AllowURI: true
