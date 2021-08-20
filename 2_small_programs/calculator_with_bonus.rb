@@ -9,6 +9,11 @@
 #   - Only English (:en) and Spanish (:es) are current options
 #   - The Spanish is rough (Google) translation
 
+# optional upgrades:
+# - update to YAML per official solution
+# - add language option at beginning or code it into config file
+# - replace loops with 'until valid_input?' loops (or until end_program? for the larger loop)
+
 require_relative 'messages'
 
 LANG = :es
@@ -18,11 +23,11 @@ def prompt(action, value='')
 end
 
 def valid_number?(num)
-  num.match?(/^-?\d+\.?\d*$/) # accepts integer, float, and negative numbers
+  num.match?(/^-?\d*\.?\d*$/) # accepts integer, float, and negative numbers
 end
 
 def operation_to_message(op)
-  return MESSAGE[:operation][LANG][op.to_i - 1] + ' ' + MESSAGE[:oper_pred][LANG]
+  return '=>' + MESSAGE[:operation][LANG][op.to_i - 1] + ' ' + MESSAGE[:oper_pred][LANG]
 end
 
 prompt(:welcome)
@@ -37,7 +42,7 @@ loop do
   end
 end
 
-prompt(:greet, name)
+prompt(:greet, name + '!')
 
 loop do # main loop
   number1 = ''
@@ -74,7 +79,6 @@ loop do # main loop
     end
   end
 
-  # prompt(:operation, idx=(operator.to_i - 1))
   puts operation_to_message(operator)
   print ' .'
   sleep 1

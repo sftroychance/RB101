@@ -18,7 +18,7 @@ MESSAGE = {
   welcome:      { en: 'Welcome to Calculator! Enter your name:',
                   es: '¡Bienvenido a la calculadora!  Introduzca su nombre' },
   greet:        { en: 'Welcome',
-                  es: 'Hola' },
+                  es: '¡Hola' },
   name_err:     { en: 'Make sure to use a valid name.',
                   es: 'Ingrese un nombre valido' },
   first_num:    { en: 'What is the first number?',
