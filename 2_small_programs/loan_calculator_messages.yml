@@ -1,0 +1,8 @@
+:welcome:       Welcome to the Loan Calculator! Let me gather some details
+:loan_amt:      What is the loan amount?
+:loan_amt_err:  Please enter a valid loan amount.
+:apr:           What is the APR (in %)?
+:apr_err:       Please enter a valid APR (in %).
+:months:        What is the loan duration (in months)?
+:months_err:    Please enter a valid loan duration (in months).
+:continue:      Would you like to perform another calculation? ('y' for yes)

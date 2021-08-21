@@ -18,70 +18,56 @@
 # - Calculate monthly payment
 # - Return summary to user
 
+require 'yaml'
+MESSAGES = YAML.load_file('loan_calculator_messages.yml')
+
 def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
-def calculate_payment(loan_amt, monthly_rate, duration)
-  loan_amt * (monthly_rate / (1 - (1 + monthly_rate)**(-duration)))
-end
-
-def calculate_monthly_rate(apr)
-  apr / 12
+def calculate_payment(loan)
+  monthly_rate = loan[:apr] / 1200 # converts annual to monthly and % to decimal
+  loan[:loan_amt] * (monthly_rate / (1 - (1 + monthly_rate)**(-loan[:months])))
 end
 
 def valid_number?(number)
   number.match?(/^\d*\.?\d*$/) && number.to_f > 0
 end
 
+def input(value_type, loan)
+  input = ''
+  valid = false
+  prompt(MESSAGES[value_type.to_sym])
+  until valid
+    input = Kernel.gets().chomp()
+    if valid_number?(input)
+      valid = true
+    else
+      prompt(MESSAGES[(value_type + '_err').to_sym])
+    end
+  end
+  loan[value_type.to_sym] = input.to_f
+end
+
+prompt(MESSAGES[:welcome])
 end_program = false
+
 until end_program
 
-  prompt('Welcome to the Loan Calculator! I''ll gather a few details:')
+  loan = { loan_amt: 0, apr: 0, months: 0 }
 
-  loan_amount = ''
-  valid_input = false
+  input('loan_amt', loan)
+  input('apr', loan)
+  input('months', loan)
 
-  until valid_input
-    prompt('What is the loan amount?')
-    loan_amount =  Kernel.gets().chomp()
-    if valid_number?(loan_amount)
-      valid_input = true
-    else
-      prompt('Please enter a valid loan amount.')
-    end
-  end
+  payment = calculate_payment(loan)
 
-  apr = ''
-  valid_input = false
-  until valid_input
-    prompt('What is the APR (in %)?')
-    apr = Kernel.gets().chomp()
-    if valid_number?(apr)
-      valid_input = true
-    else
-      prompt('Please enter a valid APR.')
-    end
-  end
+  prompt("For a loan of $#{Kernel.sprintf('%.2f', loan[:loan_amt])} " \
+         "for #{loan[:months].to_i} months at #{loan[:apr]}% APR, " \
+         "the monthly payment is: $#{Kernel.sprintf('%.2f', payment)}")
 
-  duration = ''
-  valid_input = false
-  until valid_input
-    prompt('What is the duration of the loan (in months)?')
-    duration = Kernel.gets().chomp()
-    if valid_number?(duration)
-      valid_input = true
-    else
-      prompt('Please enter a valid loan duration.')
-    end
-  end
-  monthly_rate = calculate_monthly_rate(apr.to_f)
-
-  payment = calculate_payment(loan_amount.to_f, monthly_rate.to_f / 100, duration.to_i)
-
-  prompt("For a loan of $#{Kernel.sprintf("%.2f", loan_amount)} for #{duration} months at #{apr}% " \
-         "APR, the monthly payment is: $#{Kernel.sprintf("%.2f", payment)}")
-
-end_program = true
+  prompt(MESSAGES[:continue])
+  continue = Kernel.gets().chomp()
+  end_program = true unless continue.downcase().start_with?('y')
 
 end
