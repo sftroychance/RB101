@@ -64,7 +64,7 @@ until end_program
 
   prompt("For a loan of $#{Kernel.sprintf('%.2f', loan[:loan_amt])} " \
          "for #{loan[:months].to_i} months at #{loan[:apr]}% APR, " \
-         "the monthly payment is: $#{Kernel.sprintf('%.2f', payment)}")
+         "the monthly payment is: $#{Kernel.sprintf('%.2f', payment)}") # sprintf is alias for format
 
   prompt(MESSAGES[:continue])
   continue = Kernel.gets().chomp()
