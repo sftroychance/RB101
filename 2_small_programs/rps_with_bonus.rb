@@ -46,7 +46,7 @@ until program_end
         valid = true
       else
         system('clear')
-        prompt("#{choice.to_s} is not a valid choice.")
+        prompt("#{choice} is not a valid choice.")
       end
     end
 
@@ -72,7 +72,6 @@ until program_end
       prompt('The computer wins the grand round! First to three wins!')
       break
     end
-
   end
 
   prompt("Do you want to play again? 'Y' for yes?")
