@@ -85,7 +85,8 @@ until program_end
 
     display_results(player_choice, computer_choice, outcome, scores)
 
-    sleep 2
+    prompt('Enter to continue')
+    gets
     system('clear')
 
     if scores.values.max == WINS_PER_ROUND
