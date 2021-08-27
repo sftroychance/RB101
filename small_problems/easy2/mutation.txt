@@ -20,7 +20,8 @@ In the first array1.each statement, each value of array1 is concatenated to the 
 
 The second array1.each statement changes the values of some of the elements of array1 but does not affect array2.
 
-WRONG!
+WRONG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 It will print:
 Moe
 Larry
