@@ -117,7 +117,7 @@ p integer_to_string(5000) == '5000'
 
 # I cannot locate any String methods that end with ! that do not have a corresponding non-mutating version.
 
-# Array has a method sort_by! that does not have a corresponding non-mutating version.
+# Array has a method sort_by! that does not have a corresponding non-mutating version; however, sort_by is a method of the Enumerable module, where there is not a mutating version.
 # Array mutating methods not indicated by !:
 # - <<
 # - []=

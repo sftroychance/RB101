@@ -1,0 +1,17 @@
+What would you expect the code below to print out?
+
+numbers = [1, 2, 2, 3]
+numbers.uniq
+
+puts numbers
+
+****
+
+I would expect this to print out:
+1
+2
+2
+3
+
+- uniq does not mutate (uniq! does), and the value of numbers.uniq is not being saved.
+- puts will print each element of an array on a new line (versus p, which will print the array on one line)
