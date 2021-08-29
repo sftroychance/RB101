@@ -1,0 +1,22 @@
+To drive that last one home...let's turn the tables and have the string show a modified output, while the array thwarts the method's efforts to modify the caller's version of it.
+
+def tricky_method_two(a_string_param, an_array_param)
+  a_string_param << 'rutabaga'
+  an_array_param = ['pumpkins', 'rutabaga']
+end
+
+my_string = "pumpkins"
+my_array = ["pumpkins"]
+tricky_method_two(my_string, my_array)
+
+puts "My string looks like this now: #{my_string}"
+puts "My array looks like this now: #{my_array}"
+
+***
+
+This will print:
+My string looks like this now: pumpkinsrutabaga
+My array looks like this now: ["pumpkins"]
+
+In this case, the method mutates the string; a_string_param has the same object_id as my_string, so my_string will be changed. The array, however, is reassigned to a new value; at the point of reassignment, the object_id of an_array_param is no longer the same as that of my_array, so there is no change to my_array; my_array_param is assigned to a new object.
+

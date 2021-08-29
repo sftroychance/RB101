@@ -1,0 +1,15 @@
+What do you expect to happen when the greeting variable is referenced in the last line of the code below?
+
+if false
+  greeting = "hello world"
+end
+
+greeting
+
+***
+
+I would expect error 'undefined local variable or method'. The if statement is never entered, so greeting is not initialized.
+
+WRONG!!!!
+
+new info: if you initialize a local variable within an if block, the variable will be initialized to nil though the if block is not executed!  If is an expression, and its branches do not have their own scope.

@@ -1,0 +1,33 @@
+Depending on a method to modify its arguments can be tricky:
+
+def tricky_method(a_string_param, an_array_param)
+  a_string_param += "rutabaga"
+  an_array_param << "rutabaga"
+end
+
+my_string = "pumpkins"
+my_array = ["pumpkins"]
+tricky_method(my_string, my_array)
+
+puts "My string looks like this now: #{my_string}"
+puts "My array looks like this now: #{my_array}"
+
+Whether the above "coincidentally" does what we think we wanted "depends" upon what is going on inside the method.
+
+How can we change this code to make the result easier to predict and easier for the next programmer to maintain?
+
+1. to make the behavior consistent for the two variables, we should have both values mutated; the method doesn't do anything else with my_string (it doesn't save the value of the reassignment), and no values are returned, so it seems like the intention was to mutate it as well. So we would change the first line of the method to:
+  a_string_param << "rutabaga" (assuming the missing space is intentional)
+
+2. to make it easier for the next programmer to understand what is happening, we should add ! to the end of the method name to indicate that it is destructive:
+  def tricky_method!(a_string_param, an_array_param)
+and we might rename the method as well since it is not tricky:
+  def nontricky_method!(a_string_param, an_array_param)
+
+Alternatively, as favored in the official solution:
+
+1. Do not allow the method to mutate the values, but make the changes non-destructively and return their new values from the method.
+2. Change the name of the method to reflect untrickiness.
+3. reassign the variables my_string and my_array to the return values of the method.
+
+Both these alternatives would have the same end result, but the second one would ultimately be easier to understand. In the first one, the ! indicates that the method is destructive, but without reviewing the method, you don't know if both values are being mutated, or one value is being used in mutating the other. In the second, the method call being assigned to two variables would indicate that both values are potentially being changed within the method.

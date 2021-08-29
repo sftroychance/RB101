@@ -1,0 +1,18 @@
+What is the output of the following code?
+
+answer = 42
+
+def mess_with_it(some_number)
+  some_number += 8
+end
+
+new_answer = mess_with_it(answer)
+
+p answer - 8
+
+***
+
+This will print:
+34
+
+answer is sent as an argument to mess_with_it, but it is not mutated by that method (it is an integer and is immutable anyway); the newly calculated value is returned from the method, but we don't do anything with it. The variable answer is not changed, so the result of calculation 42 - 8 will be printed.

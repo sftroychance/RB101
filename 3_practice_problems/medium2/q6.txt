@@ -1,0 +1,18 @@
+How could the following method be simplified without changing its return value?
+
+def color_valid(color)
+  if color == "blue" || color == "green"
+    true
+  else
+    false
+  end
+end
+
+***
+
+The expression by itself will return true or false, so we could make the expression the return value. Also, we could change the name of the method to reflect that a boolean is being returned.
+
+def color_valid?(color)
+  color == 'blue' || color == 'green'
+end
+

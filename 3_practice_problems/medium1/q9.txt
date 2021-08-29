@@ -1,0 +1,25 @@
+Consider these two simple methods:
+
+def foo(param = "no")
+  "yes"
+end
+
+def bar(param = "no")
+  param == "no" ? "yes" : "no"
+end
+
+What would be the return value of the following method invocation?
+
+bar(foo)
+
+***
+
+there is no local variable foo, so the foo method will be called and the result of that method will be sent as an argument to bar.
+
+When foo is called, it will return "yes" (param is not an issue since it is not used in the method) =>
+
+bar("yes")
+
+the bar method is called with argument "yes", so within that method param is set to "yes"; the ternary statement in the method will evaluate to false, therefore the method will return "no".
+
+result => "no"

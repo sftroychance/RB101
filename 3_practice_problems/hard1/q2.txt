@@ -1,0 +1,15 @@
+What is the result of the last line in the code below?
+
+greetings = { a: 'hi' }
+informal_greeting = greetings[:a]
+informal_greeting << ' there'
+
+puts informal_greeting  #  => "hi there"
+puts greetings
+
+***
+
+This will print:
+{ a=>'hi there' }
+
+informal greeting is assigned to the object greetings[:a]; after the assignment, they have the same object_id. Therefore, when informal_greeting is mutated by concatenation, greetings[:a] will also be affected.

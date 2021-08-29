@@ -1,0 +1,105 @@
+Every named entity in Ruby has an object_id. This is a unique identifier for that object.
+
+It is often the case that two different things "look the same", but they can be different objects. The "under the hood" object referred to by a particular named-variable can change depending on what is done to that named-variable.
+
+In other words, in Ruby, all values are objects...but they are not always the same object.
+
+Predict how the values and object ids will change throughout the flow of the code below:
+
+def fun_with_ids
+  a_outer = 42
+  b_outer = "forty two"
+  c_outer = [42]
+  d_outer = c_outer[0]
+
+  a_outer_id = a_outer.object_id
+  b_outer_id = b_outer.object_id
+  c_outer_id = c_outer.object_id
+  d_outer_id = d_outer.object_id
+
+  puts "a_outer is #{a_outer} with an id of: #{a_outer_id} before the block."
+  puts "b_outer is #{b_outer} with an id of: #{b_outer_id} before the block."
+  puts "c_outer is #{c_outer} with an id of: #{c_outer_id} before the block."
+  puts "d_outer is #{d_outer} with an id of: #{d_outer_id} before the block."
+  puts
+
+  1.times do
+    a_outer_inner_id = a_outer.object_id
+    b_outer_inner_id = b_outer.object_id
+    c_outer_inner_id = c_outer.object_id
+    d_outer_inner_id = d_outer.object_id
+
+    puts "a_outer id was #{a_outer_id} before the block and is: #{a_outer_inner_id} inside the block."
+    puts "b_outer id was #{b_outer_id} before the block and is: #{b_outer_inner_id} inside the block."
+    puts "c_outer id was #{c_outer_id} before the block and is: #{c_outer_inner_id} inside the block."
+    puts "d_outer id was #{d_outer_id} before the block and is: #{d_outer_inner_id} inside the block."
+    puts
+
+    a_outer = 22
+    b_outer = "thirty three"
+    c_outer = [44]
+    d_outer = c_outer[0]
+
+    puts "a_outer inside after reassignment is #{a_outer} with an id of: #{a_outer_id} before and: #{a_outer.object_id} after."
+    puts "b_outer inside after reassignment is #{b_outer} with an id of: #{b_outer_id} before and: #{b_outer.object_id} after."
+    puts "c_outer inside after reassignment is #{c_outer} with an id of: #{c_outer_id} before and: #{c_outer.object_id} after."
+    puts "d_outer inside after reassignment is #{d_outer} with an id of: #{d_outer_id} before and: #{d_outer.object_id} after."
+    puts
+
+
+    a_inner = a_outer
+    b_inner = b_outer
+    c_inner = c_outer
+    d_inner = c_inner[0]
+
+    a_inner_id = a_inner.object_id
+    b_inner_id = b_inner.object_id
+    c_inner_id = c_inner.object_id
+    d_inner_id = d_inner.object_id
+
+    puts "a_inner is #{a_inner} with an id of: #{a_inner_id} inside the block (compared to #{a_outer.object_id} for outer)."
+    puts "b_inner is #{b_inner} with an id of: #{b_inner_id} inside the block (compared to #{b_outer.object_id} for outer)."
+    puts "c_inner is #{c_inner} with an id of: #{c_inner_id} inside the block (compared to #{c_outer.object_id} for outer)."
+    puts "d_inner is #{d_inner} with an id of: #{d_inner_id} inside the block (compared to #{d_outer.object_id} for outer)."
+    puts
+  end
+
+  puts "a_outer is #{a_outer} with an id of: #{a_outer_id} BEFORE and: #{a_outer.object_id} AFTER the block."
+  puts "b_outer is #{b_outer} with an id of: #{b_outer_id} BEFORE and: #{b_outer.object_id} AFTER the block."
+  puts "c_outer is #{c_outer} with an id of: #{c_outer_id} BEFORE and: #{c_outer.object_id} AFTER the block."
+  puts "d_outer is #{d_outer} with an id of: #{d_outer_id} BEFORE and: #{d_outer.object_id} AFTER the block."
+  puts
+
+  puts "a_inner is #{a_inner} with an id of: #{a_inner_id} INSIDE and: #{a_inner.object_id} AFTER the block." rescue puts "ugh ohhhhh"
+  puts "b_inner is #{b_inner} with an id of: #{b_inner_id} INSIDE and: #{b_inner.object_id} AFTER the block." rescue puts "ugh ohhhhh"
+  puts "c_inner is #{c_inner} with an id of: #{c_inner_id} INSIDE and: #{c_inner.object_id} AFTER the block." rescue puts "ugh ohhhhh"
+  puts "d_inner is #{d_inner} with an id of: #{d_inner_id} INSIDE and: #{d_inner.object_id} AFTER the block." rescue puts "ugh ohhhhh"
+end
+
+****
+
+Tracing it:
+
+1. All the variables are initialized. Of note, a_outer and d_outer have the same integer value.
+
+2. object_id for each variable is recorded; of note, a_outer and d_outer have the same object_id as they both point to the same integer (42). (c_outer[0] also has this object_id).
+
+3. puts statements output each variable with its object_id.
+
+4. We go into a block for the loop. Variables defined outside the block are accessible within the block; however any values initialized within the block will not be available to the outer scope.
+
+5.The object_id for each outer variable is saved into a new variable within the block. These object_id values will be the same because the outer-defined variables are still in scope.
+
+6. puts statements print the object_ids for the variables in outer scope versus inner scope; they are the same because the outer-defined variables are still in scope.
+
+7. All the outer-defined variables are reassigned to new values. This means the object_id for each will change as well.
+
+6. New inner-scope variables are initialized with the corresponding values of the outer-scope variables. At this point, the corresponding inner and outer variables have the same value and the same object_id.
+
+7. Puts statements show that the values of those variables and their object_ids have changed.
+
+8. We exit the loop. At this point, all variables defined before the loop are available, but any variables defined within the loop are out of scope.
+
+9. A series of puts statements shows that the variables all still have the values and object_ids they had right before we left the loop; all the changes made within the loop are reflected in the variables because they have never gone out of scope.
+
+10. A series of puts statements tries to access the variables defined within the loop but cannot because they are not available to the outer scope.
