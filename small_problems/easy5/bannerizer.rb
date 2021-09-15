@@ -65,6 +65,7 @@ end
 
 def print_in_box(string)
   lines = split_string(string)
+
   if lines.size > 1
     field = lines.max { |a, b| a.size <=> b.size }.size + 2
   else
@@ -77,13 +78,10 @@ def print_in_box(string)
   puts horiz
   puts blank
 
-  lines.each do |line|
-    puts '|' + ' ' + line.ljust(field - 1) + '|'
-  end
+  lines.each { |line| puts '|' + ' ' + line.ljust(field - 1) + '|' }
 
   puts blank
   puts horiz
-
 end
 
 print_in_box('To boldly go where no one has gone before.')
