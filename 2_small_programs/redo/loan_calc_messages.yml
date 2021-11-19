@@ -1,0 +1,7 @@
+welcome: "Welcome to the mortgage/car loan payment calculator"
+loan_amt: "Enter the loan amount: "
+loan_amt_err: "Please enter a valid loan amount: "
+apr: "Enter the annual percentage rate (APR):"
+apr_err: "Please enter a valid APR: "
+duration: "Enter the loan duration in months:"
+duration_err: "Please enter a valid duration: "
