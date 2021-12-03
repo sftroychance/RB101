@@ -1,0 +1,4 @@
+#{verb.sample.capitalize} your #{adj.sample} #{noun.sample} when you #{verb.sample}
+your #{noun.sample}. You will #{adv.sample} #{verb.sample} the #{adj.sample} 
+#{noun.sample} and will not regret it. The #{adj.sample} #{noun.sample} can't be
+beaten #{adv.sample}!
