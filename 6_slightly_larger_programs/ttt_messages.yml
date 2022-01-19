@@ -1,0 +1,23 @@
+:welcome: |-
+  Welcome to TicTacToe! You are playing 5 rounds against the computer
+  to see who can get the most wins.
+
+  GOOD LUCK!
+:first_turn: |-
+  Who should take the first turn?
+
+  1) You, the player
+  2) The computer
+  3) Let the computer decide!
+:inv_turn:    Please enter a valid selection
+:grid:        The standard grid size for TicTacToe is 3 x 3. How high do you want to go? (3-9)
+:inv_grid:    Please enter a valid grid size from 3 to 9
+:select:      Select a square
+:inv_square:  That is not a valid square
+:winner:      The winner of this round is
+:tie:         It's a tie!
+:enter:       Enter to continue
+:game_winner: The first to five wins is
+:congrats:    Congratulations on your win!!!
+:play_again:  Would you like to play again? (y or n)
+:goodbye:     Thanks for playing TicTacToe! Goodbye!
