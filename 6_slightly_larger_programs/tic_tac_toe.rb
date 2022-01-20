@@ -9,9 +9,21 @@ def prompt(action, data='', exclamation='')
   puts "=> #{MESSAGES[action]} #{data}#{exclamation}"
 end
 
-def display_intro
-  system('clear')
-  prompt(:welcome)
+def valid_input?(str, min, max)
+  (min.to_s..max.to_s).include?(str)
+end
+
+def joinor(arr, delim=', ', conj='or')
+  phrase = arr.join(delim)
+              .reverse
+              .sub(delim.reverse, ' ' + conj.reverse + delim.reverse)
+              .reverse
+
+  if arr.size == 2
+    phrase.sub!(',', '')
+  end
+
+  phrase
 end
 
 def get_first_turn
@@ -20,12 +32,12 @@ def get_first_turn
   response = ''
 
   loop do
-    response = gets.chomp.to_i
-    break if response.between?(1, 3)
+    response = gets.chomp
+    break if valid_input?(response, 1, 3)
     prompt(:invalid)
   end
 
-  case response
+  case response.to_i
   when 1
     'Player'
   when 2
@@ -41,16 +53,15 @@ def get_grid_size
   response = ''
 
   loop do
-    response = gets.chomp.to_i
-    break if response.between?(3, 9)
+    response = gets.chomp
+    break if valid_input?(response, 3, 9)
     prompt(:inv_grid)
   end
 
-  response
+  response.to_i
 end
 
 def get_difficulty(grid_size)
-  # minimax can't handle grid_size > 3
   if grid_size == 3
     max = 3
     prompt(:difficulty)
@@ -62,12 +73,17 @@ def get_difficulty(grid_size)
   response = ''
 
   loop do
-    response = gets.chomp.to_i
-    break if response.between?(1, max)
+    response = gets.chomp
+    break if valid_input?(response, 1, max)
     prompt(:invalid)
   end
 
-  response
+  response.to_i
+end
+
+def display_intro
+  system('clear')
+  prompt(:welcome)
 end
 
 def display_header(score)
@@ -84,7 +100,7 @@ def display_board(board, score)
 
   display_header(score)
 
-  space = (1..(board.size * board.size)).each
+  space = (1..board.size**2).each
 
   (1..(board.size * 4 - 1)).each do |row|
     print ' ' * 12 if board.size == 3
@@ -95,7 +111,7 @@ def display_board(board, score)
         print '-'
       elsif col % 6 == 0
         print '|'
-      elsif row % 2 == 0 && col % 3 == 0
+      elsif row.even? && col % 3 == 0
         print "\e[31m#{marks.shift}\e[0m"
       elsif board.size > 3 && row % 4 == 3
         if col % 6 == 1
@@ -129,8 +145,44 @@ def available_spaces(board)
   avail
 end
 
+def get_center(board)
+  (board.size**2 + 1) / 2
+end
+
+def get_all_lines(board)
+  flip = board.transpose
+  diag1 = (0..(board.size - 1)).map { |i| board[i][i] }
+  diag2 = (0..(board.size - 1)).map { |i| board.reverse[i][i] }
+
+  board + flip + [diag1] + [diag2]
+end
+
 def space_empty?(board, space)
   available_spaces(board).include?(space)
+end
+
+def full_board?(board)
+  board.flatten.none?(' ')
+end
+
+def empty_board?(board)
+  board.flatten.all?(' ')
+end
+
+def switch_player(current_player)
+  if current_player == 'Player'
+    'Computer'
+  else
+    'Player'
+  end
+end
+
+def next_turn(board, current_player, difficulty)
+  if current_player == 'Player'
+    player_turn(board)
+  else
+    computer_turn(board, difficulty)
+  end
 end
 
 def player_turn(board)
@@ -139,9 +191,13 @@ def player_turn(board)
   loop do
     prompt(:select)
     puts joinor(available_spaces(board)) if board.size == 3
-    choice = gets.chomp.to_i
-    break if space_empty?(board, choice)
-    prompt(:inv_square)
+    choice = gets.chomp
+    if valid_input?(choice, 1, board.size**2) && space_empty?(board, choice.to_i)
+      choice = choice.to_i
+      break
+    else
+      prompt(:inv_square)
+    end
   end
 
   mark_choice!(board, choice, PLAYER)
@@ -271,26 +327,6 @@ def mark_choice!(board, choice, mark)
   board[(choice / board.size)][(choice % board.size)] = mark
 end
 
-def full_board?(board)
-  board.flatten.none?(' ')
-end
-
-def empty_board?(board)
-  board.flatten.all?(' ')
-end
-
-def get_center(board)
-  ((board.size * board.size) + 1) / 2
-end
-
-def get_all_lines(board)
-  flip = board.transpose
-  diag1 = (0..(board.size - 1)).map { |i| board[i][i] }
-  diag2 = (0..(board.size - 1)).map { |i| board.reverse[i][i] }
-
-  board + flip + [diag1] + [diag2]
-end
-
 def get_winner(board)
   get_all_lines(board).each do |line|
     if line.all?(PLAYER)
@@ -305,35 +341,6 @@ end
 
 def winner_found?(board)
   !!get_winner(board)
-end
-
-def joinor(arr, delim=', ', conj='or')
-  phrase = arr.join(delim)
-              .reverse
-              .sub(delim.reverse, ' ' + conj.reverse + delim.reverse)
-              .reverse
-
-  if arr.size == 2
-    phrase.sub!(',', '')
-  end
-
-  phrase
-end
-
-def switch_player(current_player)
-  if current_player == 'Player'
-    'Computer'
-  else
-    'Player'
-  end
-end
-
-def next_turn(board, current_player, difficulty)
-  if current_player == 'Player'
-    player_turn(board)
-  else
-    computer_turn(board, difficulty)
-  end
 end
 
 loop do
