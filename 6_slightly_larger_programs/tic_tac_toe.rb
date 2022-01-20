@@ -22,7 +22,7 @@ def get_first_turn
   loop do
     response = gets.chomp.to_i
     break if response.between?(1, 3)
-    prompt(:inv_turn)
+    prompt(:invalid)
   end
 
   case response
@@ -49,17 +49,38 @@ def get_grid_size
   response
 end
 
+def get_difficulty(grid_size)
+  # minimax can't handle grid_size > 3
+  if grid_size == 3
+    max = 3
+    prompt(:difficulty)
+  else
+    max = 2
+    prompt(:diff2)
+  end
+
+  response = ''
+
+  loop do
+    response = gets.chomp.to_i
+    break if response.between?(1, max)
+    prompt(:invalid)
+  end
+
+  response
+end
+
 def display_header(score)
   system('clear')
 
   puts "--TicTacToe--".center(20) + "--SCORE--".center(20)
-  puts "Player is X".center(20) + "PLAYER: #{score[:Player]}".center(20)
+  puts "Player is X".center(20)   + "PLAYER: #{score[:Player]}".center(20)
   puts "Computer is O".center(20) + "COMPUTER: #{score[:Computer]}".center(20)
   puts
 end
 
 def display_board(board, score)
-  marks = board.dup.flatten
+  marks = board.flatten
 
   display_header(score)
 
@@ -75,11 +96,11 @@ def display_board(board, score)
       elsif col % 6 == 0
         print '|'
       elsif row % 2 == 0 && col % 3 == 0
-        print marks.shift
+        print "\e[31m#{marks.shift}\e[0m"
       elsif board.size > 3 && row % 4 == 3
         if col % 6 == 1
-          if available_spaces(board).include?(space.peek)
-            print space.next.to_s.center(2)
+          if space_empty?(board, space.peek)
+            print space.next.to_s.ljust(2)
           elsif available_spaces(board).none?(space.peek)
             space.next
             print '  '
@@ -108,6 +129,10 @@ def available_spaces(board)
   avail
 end
 
+def space_empty?(board, space)
+  available_spaces(board).include?(space)
+end
+
 def player_turn(board)
   choice = 0
 
@@ -115,44 +140,129 @@ def player_turn(board)
     prompt(:select)
     puts joinor(available_spaces(board)) if board.size == 3
     choice = gets.chomp.to_i
-    break if available_spaces(board).include?(choice)
+    break if space_empty?(board, choice)
     prompt(:inv_square)
   end
 
   mark_choice!(board, choice, PLAYER)
 end
 
-def computer_turn(board)
-  # computer picks a move if it will win
+def computer_turn(board, difficulty)
+  case difficulty
+  when 1
+    random_move(board)
+  when 2
+    winning_move(board) ||
+      blocking_move(board) ||
+      center_move(board) ||
+      random_move(board)
+  when 3
+    best_move(board)
+  end
+end
+
+def random_move(board)
+  mark_choice!(board, available_spaces(board).sample, COMPUTER)
+end
+
+def winning_move(board)
   available_spaces(board).each do |space|
     mark_choice!(board, space, COMPUTER)
     if get_winner(board) == 'Computer'
-      return
+      return 1
     else
       mark_choice!(board, space, EMPTY)
     end
   end
 
-  # computer picks a move if it will block
+  nil
+end
+
+def blocking_move(board)
   available_spaces(board).each do |space|
     mark_choice!(board, space, PLAYER)
     if get_winner(board) == 'Player'
       mark_choice!(board, space, COMPUTER)
-      return
+      return 1
     else
       mark_choice!(board, space, EMPTY)
     end
   end
 
-  # computer picks center space if it is empty
-  center = ((board.size * board.size) + 1) / 2
-  if available_spaces(board).include?(center) && board.size.odd?
-    mark_choice!(board, center, COMPUTER)
-    return
+  nil
+end
+
+def center_move(board)
+  if board.size.odd? && space_empty?(board, get_center(board))
+    mark_choice!(board, get_center(board), COMPUTER)
+    return 1
   end
 
-  # computer picks a random space
-  mark_choice!(board, available_spaces(board).sample, COMPUTER)
+  nil
+end
+
+def best_move(board)
+  if empty_board?(board)
+    center_move(board) && return
+  end
+
+  best_score = -100
+  best_choice = 0
+
+  # shuffle randomizes the computer AI selection
+  # amongst multiple moves with equally highest value
+  available_spaces(board).shuffle.each do |space|
+    mark_choice!(board, space, COMPUTER)
+
+    current_score = minimax(board, 0, false)
+
+    mark_choice!(board, space, EMPTY)
+
+    if current_score > best_score
+      best_score = current_score
+      best_choice = space
+    end
+  end
+
+  mark_choice!(board, best_choice, COMPUTER)
+end
+
+def minimax(board, depth, computer_turn)
+  if get_winner(board) == 'Computer'
+    return 10 - depth
+  end
+
+  if get_winner(board) == 'Player'
+    return -10 + depth
+  end
+
+  if full_board?(board)
+    return 0
+  end
+
+  if computer_turn
+    best_path = -100
+
+    available_spaces(board).each do |space|
+      mark_choice!(board, space, COMPUTER)
+
+      best_path = [best_path, minimax(board, depth + 1, !computer_turn)].max
+
+      mark_choice!(board, space, EMPTY)
+    end
+  else
+    best_path = 100
+
+    available_spaces(board).each do |space|
+      mark_choice!(board, space, PLAYER)
+
+      best_path = [best_path, minimax(board, depth + 1, !computer_turn)].min
+
+      mark_choice!(board, space, EMPTY)
+    end
+  end
+
+  best_path
 end
 
 def mark_choice!(board, choice, mark)
@@ -163,6 +273,14 @@ end
 
 def full_board?(board)
   board.flatten.none?(' ')
+end
+
+def empty_board?(board)
+  board.flatten.all?(' ')
+end
+
+def get_center(board)
+  ((board.size * board.size) + 1) / 2
 end
 
 def get_all_lines(board)
@@ -210,11 +328,11 @@ def switch_player(current_player)
   end
 end
 
-def next_turn(board, current_player)
+def next_turn(board, current_player, difficulty)
   if current_player == 'Player'
     player_turn(board)
   else
-    computer_turn(board)
+    computer_turn(board, difficulty)
   end
 end
 
@@ -225,6 +343,7 @@ loop do
 
   first_turn = get_first_turn
   grid_size = get_grid_size
+  difficulty = get_difficulty(grid_size)
 
   until score.values.max == 5
     board = Array.new(grid_size) { Array.new(grid_size, EMPTY) }
@@ -234,7 +353,7 @@ loop do
     loop do
       display_board(board, score)
 
-      next_turn(board, current_player)
+      next_turn(board, current_player, difficulty)
 
       current_player = switch_player(current_player)
 
@@ -245,7 +364,9 @@ loop do
 
     if winner_found?(board)
       winner = get_winner(board)
+
       score[winner.to_sym] += 1
+
       display_board(board, score)
       prompt(:winner, winner, '!')
     else
