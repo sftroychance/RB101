@@ -40,5 +40,25 @@ def star(num)
   print_lines.each {|line| puts line }
 end
 
+def sine_wave(height)
+  print_lines = []
+
+  (0...height).each do |line|
+    print_lines[line] = (' ' * (height - line - 1) + '*' + ' ' * (2 * line) + '*')
+  end
+
+  print_lines.each { |line| puts line }
+
+  print_lines.reverse.each_with_index do |line, idx|
+    print ' ' * ((height * 2) + idx)
+    puts line.reverse
+  end
+
+
+
+end
 star(31)
 
+sine_wave(6)
+
+sine_wave(12)
